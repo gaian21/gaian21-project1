@@ -1,0 +1,8 @@
+Updating all pages with the navigation logic:
+
+All pages now include:
+
+Login check and redirect
+Consistent navigation
+Logo redirects based on login status
+Protected routes for authenticated users
