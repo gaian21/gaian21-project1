@@ -14,11 +14,42 @@
         }
         .logout-btn { background: #dc2626; }
         .account-btn { background: #2563eb; }
+        .hero {
+            height: 80vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
     <nav>
-        <a href="loginmain.html" class="logo">Greek Syllector</a>
+        <a href="#" class="logo">Greek Syllector</a>
         <div class="nav-links">
             <a href="mycollection.html">My Collection</a>
             <a href="card-detail.html">Card Details</a>
@@ -28,7 +59,38 @@
             <a href="index.html" class="nav-button logout-btn">Logout</a>
         </div>
     </nav>
+    <script src="scripts/navigation.js"></script>
 
-    <!-- Rest of the content remains the same -->
+    <div class="hero">
+        <div>
+            <h1>Welcome to Your Dashboard</h1>
+            <p>Track and manage your card collection</p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>Total Cards</h3>
+            <div class="stat-number">127</div>
+            <p>Cards in your collection</p>
+        </div>
+        <div class="card">
+            <h3>Collection Value</h3>
+            <div class="stat-number">$12,450</div>
+            <p>Total market value</p>
+        </div>
+        <div class="card">
+            <h3>Completion</h3>
+            <div class="stat-number">25.4%</div>
+            <p>Of total collection</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        if (!sessionStorage.getItem('user_session')) {
+            window.location.href = 'signin.html';
+        }
+    </script>
 </body>
 </html>
