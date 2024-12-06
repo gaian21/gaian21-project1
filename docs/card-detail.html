@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Detail - Greek Syllector</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .card-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .card-image {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .card-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        .image-controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .image-button {
+            padding: 0.5rem 2rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        .info-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        .info-value {
+            font-weight: bold;
+            margin-top: 0.25rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-purple {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">Greek Syllector</a>
+        <div class="nav-links">
+            <a href="signin.html">Sign In</a>
+            <a href="register.html">Register</a>
+            <a href="explore.html">Explore</a>
+            <a href="statistics.html">Statistics</a>
+        </div>
+    </nav>
+
+    <div class="card-container">
+        <!-- Left Column - Card Image -->
+        <div class="card-image">
+            <img src="/api/placeholder/400/560" alt="Giannis Antetokounmpo Card">
+            <div class="image-controls">
+                <button class="image-button">Front</button>
+                <button class="image-button" style="background:#4b5563">Back</button>
+            </div>
+        </div>
+
+        <!-- Right Column - Card Information -->
+        <div>
+            <div class="info-section">
+                <h1 style="font-size:1.875rem;font-weight:bold;margin-bottom:0.5rem">Giannis Antetokounmpo</h1>
+                <div style="margin-bottom:1rem">
+                    <span class="badge badge-blue">2023-24 Prizm</span>
+                    <span class="badge badge-purple">Silver Parallel</span>
+                    <span class="badge" style="background:#f3f4f6;color:#374151">#45/199</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Team</span>
+                        <span class="info-value">Milwaukee Bucks</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Position</span>
+                        <span class="info-value">Forward</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Card Number</span>
+                        <span class="info-value">#127</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Rookie Card</span>
+                        <span class="info-value">No</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 style="font-size:1.25rem;font-weight:bold;margin-bottom:1rem">Market Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Last Sale</span>
+                        <span class="info-value">$249.99</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Average Price</span>
+                        <span class="info-value">$275.50</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Price Trend</span>
+                        <span class="info-value" style="color:#10b981">↑ Up 5.2%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Population</span>
+                        <span class="info-value">199</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 style="font-size:1.25rem;font-weight:bold;margin-bottom:1rem">Card Details</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Series</span>
+                        <span class="info-value">2023-24 Prizm Basketball</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Parallel</span>
+                        <span class="info-value">Silver</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Release Date</span>
+                        <span class="info-value">December 2023</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Print Run</span>
+                        <span class="info-value">199</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>Greek Syllector</h3>
+                <p>Track your collection</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <p><a href="signin.html">Sign In</a></p>
+                <p><a href="register.html">Register</a></p>
+                <p><a href="explore.html">Explore</a></p>
+                <p><a href="statistics.html">Statistics</a></p>
+            </div>
+            <div>
+                <h3>Contact</h3>
+                <p>support@greeksyllector.com</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
