@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Greek Syllector</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .auth-form {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+        }
+        .button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">Greek Syllector</a>
+        <div class="nav-links">
+            <a href="signin.html">Sign In</a>
+            <a href="register.html">Register</a>
+            <a href="explore.html">Explore</a>
+            <a href="statistics.html">Statistics</a>
+        </div>
+    </nav>
+
+    <div class="auth-form">
+        <h2 style="margin-bottom:1.5rem;text-align:center">Sign In</h2>
+        <form>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" class="input" required>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" class="input" required>
+            </div>
+            <button type="submit" class="button">Sign In</button>
+            <p style="text-align:center;margin-top:1rem">Don't have an account? <a href="register.html" style="color:#2563eb;text-decoration:none">Register</a></p>
+        </form>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>Greek Syllector</h3>
+                <p>Track your collection</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <p><a href="signin.html">Sign In</a></p>
+                <p><a href="register.html">Register</a></p>
+                <p><a href="explore.html">Explore</a></p>
+                <p><a href="statistics.html">Statistics</a></p>
+            </div>
+            <div>
+                <h3>Contact</h3>
+                <p>support@greeksyllector.com</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
