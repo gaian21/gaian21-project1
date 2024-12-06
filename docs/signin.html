@@ -31,9 +31,7 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .button:hover {
-            background: #1d4ed8;
-        }
+        .button:hover { background: #1d4ed8; }
         .error { color: #dc2626; }
         .success { color: #059669; }
         .message { font-size: 0.875rem; margin-top: 0.5rem; text-align: center; }
@@ -76,58 +74,31 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            try {
-                // Call authenticate_user function from our database schema
-                const response = await fetch('/api/auth/signin', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password,
-                        query: `
-                            SELECT * FROM authenticate_user(
-                                $1, -- email
-                                $2, -- password
-                                $3  -- encryption_key (from server environment)
-                            );
-                        `
-                    })
-                });
+            // Test credentials (simulating database check)
+            const validCredentials = [
+                { email: 'admin@greeksyllector.com', password: 'AdminPass789', username: 'admin_user' },
+                { email: 'john@example.com', password: 'Password123', username: 'john_doe' },
+                { email: 'mary@example.com', password: 'SecurePass456', username: 'mary_smith' }
+            ];
 
-                const data = await response.json();
+            const user = validCredentials.find(cred => 
+                cred.email === email && cred.password === password
+            );
 
-                if (data.authenticated) {
-                    // Store user session securely
-                    sessionStorage.setItem('user_session', JSON.stringify({
-                        user_id: data.user_id,
-                        username: data.username,
-                        session_id: data.session_id
-                    }));
-
-                    messageArea.innerHTML = '<span class="success">Login successful! Redirecting...</span>';
-                    setTimeout(() => {
-                        window.location.href = 'loginmain.html';
-                    }, 1500);
-                } else {
-                    messageArea.innerHTML = '<span class="error">Invalid email or password</span>';
-                }
-
-            } catch (error) {
-                console.error('Authentication error:', error);
-                messageArea.innerHTML = '<span class="error">Authentication failed. Please try again.</span>';
-
-                // For development testing only - remove in production
-                if (email === 'test@example.com' && password === 'password123') {
-                    messageArea.innerHTML = '<span class="success">Login successful! Redirecting...</span>';
-                    sessionStorage.setItem('user_session', JSON.stringify({
-                        user_id: 'test-id',
-                        username: 'Test User',
-                        session_id: 'test-session'
-                    }));
-                    setTimeout(() => {
-                        window.location.href = 'loginmain.html';
-                    }, 1500);
-                }
+            if (user) {
+                messageArea.innerHTML = '<span class="success">Login successful! Redirecting...</span>';
+                // Store user session data
+                sessionStorage.setItem('user_session', JSON.stringify({
+                    username: user.username,
+                    email: user.email,
+                    isAuthenticated: true
+                }));
+                // Redirect to loginmain
+                setTimeout(() => {
+                    window.location.href = 'loginmain.html';
+                }, 1500);
+            } else {
+                messageArea.innerHTML = '<span class="error">Invalid email or password</span>';
             }
         });
     </script>
