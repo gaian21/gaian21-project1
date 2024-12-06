@@ -35,6 +35,13 @@
         .error { color: #dc2626; }
         .success { color: #059669; }
         .message { font-size: 0.875rem; margin-top: 0.5rem; text-align: center; }
+        #debugInfo {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f3f4f6;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -64,10 +71,40 @@
             <p style="text-align:center;margin-top:1rem">
                 Don't have an account? <a href="register.html" style="color:#2563eb;text-decoration:none">Register</a>
             </p>
+            
+            <!-- Debug information section -->
+            <div id="debugInfo">
+                <h3>Sample Users from Database:</h3>
+                <p>1. Email: john@example.com / Pass: Password123</p>
+                <p>2. Email: mary@example.com / Pass: SecurePass456</p>
+                <p>3. Email: admin@greeksyllector.com / Pass: AdminPass789</p>
+            </div>
         </form>
     </div>
 
     <script>
+        // Sample users from sample_users.sql
+        const sampleUsers = [
+            {
+                username: 'john_doe',
+                email: 'john@example.com',
+                password: 'Password123',
+                encryption_key: 'test_key_123'
+            },
+            {
+                username: 'mary_smith',
+                email: 'mary@example.com',
+                password: 'SecurePass456',
+                encryption_key: 'test_key_123'
+            },
+            {
+                username: 'admin_user',
+                email: 'admin@greeksyllector.com',
+                password: 'AdminPass789',
+                encryption_key: 'test_key_123'
+            }
+        ];
+
         document.getElementById('signinForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const messageArea = document.getElementById('messageArea');
@@ -75,73 +112,47 @@
             const password = document.getElementById('password').value;
 
             try {
-                // Direct call to authenticate_user function from user_schema.sql
-                const result = await authenticate_user(email, password, 'test_key_123');
-                
-                if (result.authenticated) {
+                // Find user in sample_users.sql
+                const user = sampleUsers.find(u => u.email === email && u.password === password);
+
+                if (user) {
                     messageArea.innerHTML = '<span class="success">Login successful! Redirecting...</span>';
-                    // Store the encrypted user session
-                    const now = new Date();
+                    
+                    // Create session using user_schema.sql format
                     const session = {
-                        user_id: result.user_id,
-                        username: result.username,
-                        created_at: now.toISOString(),
-                        expires_at: new Date(now.getTime() + 24*60*60*1000).toISOString()
+                        username: user.username,
+                        email: user.email,
+                        timestamp: new Date().toISOString()
                     };
-                    
-                    // Insert into user_sessions table
-                    await createUserSession(session);
-                    
+
+                    // Store session (encrypted in real implementation)
+                    sessionStorage.setItem('user_session', JSON.stringify(session));
+
+                    // Log successful login
+                    console.log('LOGIN_SUCCESS', {
+                        username: user.username,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    // Redirect to main page
                     setTimeout(() => {
                         window.location.href = 'loginmain.html';
                     }, 1500);
                 } else {
-                    // Log failed attempt in security_audit_log
-                    await logSecurityEvent(result.user_id, 'LOGIN_FAILED', {
-                        timestamp: new Date().toISOString(),
-                        ip_address: '127.0.0.1', // Would be actual IP in production
-                        user_agent: navigator.userAgent
+                    // Log failed attempt
+                    console.log('LOGIN_FAILED', {
+                        email: email,
+                        timestamp: new Date().toISOString()
                     });
-                    
+
                     messageArea.innerHTML = '<span class="error">Invalid email or password</span>';
                 }
+
             } catch (error) {
                 console.error('Authentication error:', error);
                 messageArea.innerHTML = '<span class="error">Authentication failed. Please try again.</span>';
             }
         });
-
-        // Functions from user_schema.sql
-        async function authenticate_user(email, password, encryption_key) {
-            // This would be the actual database call in production
-            // For now, simulate the database function behavior
-            const email_hash = encode_digest(email.toLowerCase());
-            
-            // Check against sample_users.sql data
-            if (email === 'admin@greeksyllector.com' && password === 'AdminPass789') {
-                return {
-                    user_id: '550e8400-e29b-41d4-a716-446655440000',
-                    username: 'admin_user',
-                    authenticated: true
-                };
-            }
-            return { authenticated: false };
-        }
-
-        async function createUserSession(session) {
-            // This would create a new session in the user_sessions table
-            console.log('Creating user session:', session);
-        }
-
-        async function logSecurityEvent(user_id, event_type, details) {
-            // This would log to security_audit_log table
-            console.log('Logging security event:', { user_id, event_type, details });
-        }
-
-        function encode_digest(text) {
-            // Simulate the database's digest function
-            return btoa(text); // Basic encoding for demonstration
-        }
     </script>
 
     <footer>
