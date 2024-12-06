@@ -67,38 +67,94 @@
         </form>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
+        // Encryption key - should be stored securely in environment variables
+        const ENCRYPTION_KEY = 'test_key_123'; // Example key, use proper key in production
+
+        // Function to hash email (similar to database function)
+        function hashEmail(email) {
+            return CryptoJS.SHA256(email.toLowerCase()).toString(CryptoJS.enc.Hex);
+        }
+
+        // Function to encrypt data
+        function encryptData(data) {
+            return CryptoJS.AES.encrypt(data, ENCRYPTION_KEY).toString();
+        }
+
+        // Function to hash password with salt
+        async function hashPassword(password, salt) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password + salt);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
         document.getElementById('signinForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const messageArea = document.getElementById('messageArea');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Test credentials (simulating database check)
-            const validCredentials = [
-                { email: 'admin@greeksyllector.com', password: 'AdminPass789', username: 'admin_user' },
-                { email: 'john@example.com', password: 'Password123', username: 'john_doe' },
-                { email: 'mary@example.com', password: 'SecurePass456', username: 'mary_smith' }
-            ];
+            try {
+                // Hash email for comparison with database email_hash
+                const emailHash = hashEmail(email);
 
-            const user = validCredentials.find(cred => 
-                cred.email === email && cred.password === password
-            );
+                // Make API call to backend with hashed credentials
+                const response = await fetch('/api/auth/signin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email_hash: emailHash,
+                        password: password, // Password will be hashed with salt on server
+                        query: 'SELECT * FROM authenticate_user($1, $2, $3);'
+                    })
+                });
 
-            if (user) {
-                messageArea.innerHTML = '<span class="success">Login successful! Redirecting...</span>';
-                // Store user session data
-                sessionStorage.setItem('user_session', JSON.stringify({
-                    username: user.username,
-                    email: user.email,
-                    isAuthenticated: true
-                }));
-                // Redirect to loginmain
-                setTimeout(() => {
-                    window.location.href = 'loginmain.html';
-                }, 1500);
-            } else {
-                messageArea.innerHTML = '<span class="error">Invalid email or password</span>';
+                if (!response.ok) {
+                    throw new Error('Authentication failed');
+                }
+
+                const data = await response.json();
+
+                // For development testing - remove in production
+                const testUsers = [
+                    {
+                        email: 'admin@greeksyllector.com',
+                        password: 'AdminPass789',
+                        email_hash: hashEmail('admin@greeksyllector.com')
+                    },
+                    {
+                        email: 'john@example.com',
+                        password: 'Password123',
+                        email_hash: hashEmail('john@example.com')
+                    }
+                ];
+
+                const testUser = testUsers.find(user => 
+                    user.email_hash === emailHash && user.password === password
+                );
+
+                if (testUser) {
+                    messageArea.innerHTML = '<span class="success">Login successful! Redirecting...</span>';
+                    // Store encrypted session data
+                    const sessionData = encryptData(JSON.stringify({
+                        email_hash: testUser.email_hash,
+                        timestamp: new Date().toISOString()
+                    }));
+                    sessionStorage.setItem('user_session', sessionData);
+                    setTimeout(() => {
+                        window.location.href = 'loginmain.html';
+                    }, 1500);
+                } else {
+                    messageArea.innerHTML = '<span class="error">Invalid email or password</span>';
+                }
+
+            } catch (error) {
+                console.error('Authentication error:', error);
+                messageArea.innerHTML = '<span class="error">Authentication failed. Please try again.</span>';
             }
         });
     </script>
