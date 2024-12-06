@@ -3,80 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greek Syllector - Your Virtual Collection</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="styles/main.css" rel="stylesheet">
+    <title>Greek Syllector</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #F3F4F6;
+        }
+        
+        nav {
+            background: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: #4B5563;
+            text-decoration: none;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            padding: 3rem 0;
+            background-color: #F9FAFB;
+        }
+        
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+        
+        .welcome-section p {
+            color: #4B5563;
+            font-size: 1.25rem;
+        }
+        
+        .content-grid {
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+        
+        .release-item {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .trend-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .up-trend {
+            color: #10B981;
+        }
+        
+        .down-trend {
+            color: #EF4444;
+        }
+        
+        footer {
+            background: #1F2937;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #9CA3AF;
+            text-decoration: none;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <a href="/" class="text-xl font-bold text-gray-800">Greek Syllector</a>
-                </div>
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="pages/mycollection.html" class="text-gray-600 hover:text-gray-900">My Collection</a>
-                    <a href="pages/explore.html" class="text-gray-600 hover:text-gray-900">Explore</a>
-                    <a href="pages/statistics.html" class="text-gray-600 hover:text-gray-900">Statistics</a>
-                </div>
-            </div>
+<body>
+    <nav>
+        <a href="/" class="logo">Greek Syllector</a>
+        <div class="nav-links">
+            <a href="/mycollection">My Collection</a>
+            <a href="/explore">Explore</a>
+            <a href="/statistics">Statistics</a>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-4 py-8">
-        <section class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Greek Syllector</h1>
-            <p class="text-xl text-gray-600">Your Digital Panini Basketball Card Collection</p>
-        </section>
+    <section class="welcome-section">
+        <h1>Welcome to Greek Syllector</h1>
+        <p>Your Digital Panini Basketball Card Collection</p>
+    </section>
 
-        <div class="grid md:grid-cols-2 gap-8 mb-12">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Latest Releases</h2>
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4">
-                        <img src="/api/placeholder/100/140" alt="2023-24 Prizm" class="rounded-lg">
-                        <div>
-                            <h3 class="font-bold">2023-24 Prizm Basketball</h3>
-                            <p class="text-gray-600">Latest Release</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Market Trends</h2>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <span>Prizm Base Cards</span>
-                        <span class="text-green-600">↑ 12%</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span>Select Prizms</span>
-                        <span class="text-red-600">↓ 5%</span>
-                    </div>
+    <div class="content-grid">
+        <div class="card">
+            <h2>Latest Releases</h2>
+            <div class="release-item">
+                <img src="/api/placeholder/100/140" alt="2023-24 Prizm" style="border-radius: 0.5rem;">
+                <div>
+                    <h3>2023-24 Prizm Basketball</h3>
+                    <p style="color: #6B7280;">Latest Release</p>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Greek Syllector</h3>
-                    <p class="text-gray-400">Track your Panini basketball card collection</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="pages/mycollection.html" class="text-gray-400 hover:text-white">My Collection</a></li>
-                        <li><a href="pages/explore.html" class="text-gray-400 hover:text-white">Explore</a></li>
-                        <li><a href="pages/statistics.html" class="text-gray-400 hover:text-white">Statistics</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Contact</h3>
-                    <p class="text-gray-400">support@greeksyllector.com</p>
-                </div>
+        <div class="card">
+            <h2>Market Trends</h2>
+            <div class="trend-item">
+                <span>Prizm Base Cards</span>
+                <span class="up-trend">↑ 12%</span>
+            </div>
+            <div class="trend-item">
+                <span>Select Prizms</span>
+                <span class="down-trend">↓ 5%</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Greek Syllector</h3>
+                <p>Track your Panini basketball card collection</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/mycollection">My Collection</a></li>
+                    <li><a href="/explore">Explore</a></li>
+                    <li><a href="/statistics">Statistics</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>support@greeksyllector.com</p>
             </div>
         </div>
     </footer>
