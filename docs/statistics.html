@@ -5,9 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics - Greek Syllector</title>
     <link rel="stylesheet" href="styles/main.css">
-    <script src="scripts/session-check.js"></script>
+    <style>
+        .nav-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            color: white;
+        }
+        .logout-btn { background: #dc2626; }
+        .account-btn { background: #2563eb; }
+    </style>
 </head>
 <body>
-    <!-- Rest of the statistics.html content remains the same -->
+    <nav>
+        <a href="#" class="logo">Greek Syllector</a>
+        <div class="nav-links">
+            <a href="mycollection.html">My Collection</a>
+            <a href="card-detail.html">Card Details</a>
+            <a href="explore.html">Explore</a>
+            <a href="statistics.html">Statistics</a>
+            <a href="myaccount.html" class="nav-button account-btn">My Account</a>
+            <a href="index.html" class="nav-button logout-btn">Logout</a>
+        </div>
+    </nav>
+    <script src="scripts/navigation.js"></script>
+
+    <!-- Rest of statistics page content -->
+
+    <script>
+        if (!sessionStorage.getItem('user_session')) {
+            window.location.href = 'signin.html';
+        }
+    </script>
 </body>
 </html>

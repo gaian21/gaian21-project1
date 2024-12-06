@@ -6,182 +6,36 @@
     <title>My Account - Greek Syllector</title>
     <link rel="stylesheet" href="styles/main.css">
     <style>
-        .account-container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        .account-section {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
-        }
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .data-item {
-            padding: 0.5rem;
-            background: #f8fafc;
+        .nav-button {
+            padding: 0.5rem 1rem;
             border-radius: 0.25rem;
+            text-decoration: none;
+            color: white;
         }
-        .data-label {
-            color: #64748b;
-            font-size: 0.875rem;
-        }
-        .data-value {
-            font-weight: 500;
-            margin-top: 0.25rem;
-        }
-        .security-log {
-            margin-top: 1rem;
-        }
-        .log-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .log-date {
-            color: #64748b;
-            font-size: 0.875rem;
-        }
+        .logout-btn { background: #dc2626; }
+        .account-btn { background: #2563eb; }
     </style>
 </head>
 <body>
     <nav>
-        <a href="loginmain.html" class="logo">Greek Syllector</a>
+        <a href="#" class="logo">Greek Syllector</a>
         <div class="nav-links">
             <a href="mycollection.html">My Collection</a>
             <a href="card-detail.html">Card Details</a>
             <a href="explore.html">Explore</a>
             <a href="statistics.html">Statistics</a>
-            <a href="myaccount.html" style="background:#2563eb;color:white;padding:0.5rem 1rem;border-radius:0.25rem;">My Account</a>
-            <a href="index.html" style="background:#dc2626;color:white;padding:0.5rem 1rem;border-radius:0.25rem;">Logout</a>
+            <a href="myaccount.html" class="nav-button account-btn">My Account</a>
+            <a href="index.html" class="nav-button logout-btn">Logout</a>
         </div>
     </nav>
+    <script src="scripts/navigation.js"></script>
 
-    <div class="account-container">
-        <h1 style="margin-bottom:2rem">My Account</h1>
-
-        <div class="account-section">
-            <h2>Personal Information</h2>
-            <div class="data-grid">
-                <div class="data-item">
-                    <div class="data-label">Username</div>
-                    <div class="data-value" id="username">Loading...</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">Email</div>
-                    <div class="data-value" id="email">Loading...</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">Account Created</div>
-                    <div class="data-value" id="creation_date">Loading...</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">Last Login</div>
-                    <div class="data-value" id="last_login">Loading...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="account-section">
-            <h2>Account Status</h2>
-            <div class="data-grid">
-                <div class="data-item">
-                    <div class="data-label">Status</div>
-                    <div class="data-value" id="account_status">Loading...</div>
-                </div>
-                <div class="data-item">
-                    <div class="data-label">Last Password Change</div>
-                    <div class="data-value" id="last_password_change">Loading...</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="account-section">
-            <h2>Security Log</h2>
-            <div class="security-log" id="security_log">
-                <!-- Log entries will be inserted here -->
-            </div>
-        </div>
-    </div>
+    <!-- Rest of account page content -->
 
     <script>
-        // Function to load user data from schema
-        async function loadUserData() {
-            try {
-                const session = JSON.parse(sessionStorage.getItem('user_session'));
-                if (!session) {
-                    window.location.href = 'signin.html';
-                    return;
-                }
-
-                // In real implementation, fetch from database
-                // Example data matching user_schema.sql structure
-                const userData = {
-                    username: session.username,
-                    email: session.email,
-                    creation_date: '2024-01-15',
-                    last_login: new Date().toISOString(),
-                    account_status: 'Active',
-                    last_password_change: '2024-02-01',
-                    security_log: [
-                        { event: 'LOGIN_SUCCESS', timestamp: new Date().toISOString() },
-                        { event: 'PASSWORD_CHANGED', timestamp: '2024-02-01T10:30:00Z' },
-                        { event: 'ACCOUNT_CREATED', timestamp: '2024-01-15T08:00:00Z' }
-                    ]
-                };
-
-                // Update UI
-                document.getElementById('username').textContent = userData.username;
-                document.getElementById('email').textContent = userData.email;
-                document.getElementById('creation_date').textContent = new Date(userData.creation_date).toLocaleDateString();
-                document.getElementById('last_login').textContent = new Date(userData.last_login).toLocaleString();
-                document.getElementById('account_status').textContent = userData.account_status;
-                document.getElementById('last_password_change').textContent = new Date(userData.last_password_change).toLocaleDateString();
-
-                // Update security log
-                const logHtml = userData.security_log.map(log => `
-                    <div class="log-item">
-                        <span>${log.event}</span>
-                        <span class="log-date">${new Date(log.timestamp).toLocaleString()}</span>
-                    </div>
-                `).join('');
-                document.getElementById('security_log').innerHTML = logHtml;
-
-            } catch (error) {
-                console.error('Error loading user data:', error);
-            }
+        if (!sessionStorage.getItem('user_session')) {
+            window.location.href = 'signin.html';
         }
-
-        // Load data on page load
-        loadUserData();
     </script>
-
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <h3>Greek Syllector</h3>
-                <p>Track your collection</p>
-            </div>
-            <div>
-                <h3>Quick Links</h3>
-                <p><a href="mycollection.html">My Collection</a></p>
-                <p><a href="card-detail.html">Card Details</a></p>
-                <p><a href="explore.html">Explore</a></p>
-                <p><a href="statistics.html">Statistics</a></p>
-            </div>
-            <div>
-                <h3>Contact</h3>
-                <p>support@greeksyllector.com</p>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>
