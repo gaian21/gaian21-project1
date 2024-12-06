@@ -1,22 +1,10 @@
-/* Custom styles */
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
-.card {
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.owned {
-    border: 2px solid #10B981;
-}
-
-.not-owned {
-    opacity: 0.7;
-}
+body { margin: 0; font-family: system-ui; background: #f3f4f6; }
+nav { background: white; padding: 1rem; display: flex; justify-content: space-between; box-shadow: 0 1px 3px #0001; }
+.logo { font-weight: bold; color: #000; text-decoration: none; }
+.nav-links a { color: #666; text-decoration: none; margin-left: 2rem; }
+.welcome { text-align: center; padding: 3rem; background: #f9fafb; }
+.grid { max-width: 1200px; margin: 2rem auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; padding: 0 1rem; }
+.card { background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px #0001; }
+.trend-up { color: #10b981; }
+.trend-down { color: #ef4444; }
+footer { background: #1f2937; color: white; padding: 2rem; margin-top: 3rem; }
