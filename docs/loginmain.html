@@ -6,8 +6,96 @@
     <title>Greek Syllector - Dashboard</title>
     <link rel="stylesheet" href="styles/main.css">
     <script src="scripts/session-check.js"></script>
+    <style>
+        .hero {
+            height: 80vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 1rem 0;
+        }
+    </style>
 </head>
 <body>
-    <!-- Rest of the loginmain.html content remains the same -->
+    <nav>
+        <a href="loginmain.html" class="logo">Greek Syllector</a>
+        <div class="nav-links">
+            <a href="mycollection.html">My Collection</a>
+            <a href="card-detail.html">Card Details</a>
+            <a href="explore.html">Explore</a>
+            <a href="statistics.html">Statistics</a>
+            <a href="index.html" style="background:#dc2626;color:white;padding:0.5rem 1rem;border-radius:0.25rem;">Logout</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div>
+            <h1>Welcome to Your Dashboard</h1>
+            <p>Track and manage your card collection</p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>Total Cards</h3>
+            <div class="stat-number">127</div>
+            <p>Cards in your collection</p>
+        </div>
+        <div class="card">
+            <h3>Collection Value</h3>
+            <div class="stat-number">$12,450</div>
+            <p>Total market value</p>
+        </div>
+        <div class="card">
+            <h3>Completion</h3>
+            <div class="stat-number">25.4%</div>
+            <p>Of total collection</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>Greek Syllector</h3>
+                <p>Track your collection</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <p><a href="mycollection.html">My Collection</a></p>
+                <p><a href="card-detail.html">Card Details</a></p>
+                <p><a href="explore.html">Explore</a></p>
+                <p><a href="statistics.html">Statistics</a></p>
+            </div>
+            <div>
+                <h3>Contact</h3>
+                <p>support@greeksyllector.com</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
