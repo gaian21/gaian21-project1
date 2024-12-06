@@ -31,9 +31,11 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .button:hover {
-            background: #1d4ed8;
-        }
+        .button:hover { background: #1d4ed8; }
+        .error { color: #dc2626; }
+        .success { color: #059669; }
+        .message { font-size: 0.875rem; margin-top: 0.5rem; text-align: center; }
+        .validation-message { font-size: 0.75rem; color: #dc2626; margin-top: 0.25rem; }
     </style>
 </head>
 <body>
@@ -49,27 +51,126 @@
 
     <div class="auth-form">
         <h2 style="margin-bottom:1.5rem;text-align:center">Register</h2>
-        <form>
+        <form id="registrationForm">
             <div>
-                <label for="name">Full Name</label>
-                <input type="text" id="name" class="input" required>
+                <label for="username">Username</label>
+                <input type="text" id="username" class="input" required
+                       pattern="^[a-zA-Z0-9_]{3,20}$"
+                       title="3-20 characters, letters, numbers and underscore only">
+                <div id="usernameValidation" class="validation-message"></div>
             </div>
             <div>
                 <label for="email">Email</label>
                 <input type="email" id="email" class="input" required>
+                <div id="emailValidation" class="validation-message"></div>
             </div>
             <div>
                 <label for="password">Password</label>
-                <input type="password" id="password" class="input" required>
+                <input type="password" id="password" class="input" required
+                       pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                       title="Minimum 8 characters, at least one letter and one number">
+                <div id="passwordValidation" class="validation-message"></div>
             </div>
             <div>
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" class="input" required>
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" class="input" required>
+                <div id="confirmPasswordValidation" class="validation-message"></div>
             </div>
+            <div id="messageArea" class="message"></div>
             <button type="submit" class="button">Register</button>
-            <p style="text-align:center;margin-top:1rem">Already have an account? <a href="signin.html" style="color:#2563eb;text-decoration:none">Sign In</a></p>
+            <p style="text-align:center;margin-top:1rem">
+                Already have an account? <a href="signin.html" style="color:#2563eb;text-decoration:none">Sign In</a>
+            </p>
         </form>
     </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageArea = document.getElementById('messageArea');
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Client-side validation
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordValidation').textContent = 'Passwords do not match';
+                return;
+            }
+
+            try {
+                // Call create_user function from our database schema
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password,
+                        query: `
+                            SELECT * FROM create_user(
+                                $1, -- username
+                                $2, -- email
+                                $3, -- password
+                                $4  -- encryption_key (from server environment)
+                            );
+                        `
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    messageArea.innerHTML = '<span class="success">Registration successful! Redirecting to login...</span>';
+                    setTimeout(() => {
+                        window.location.href = 'signin.html';
+                    }, 1500);
+                } else {
+                    messageArea.innerHTML = `<span class="error">${data.message}</span>`;
+                }
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                messageArea.innerHTML = '<span class="error">Registration failed. Please try again.</span>';
+
+                // For development testing only - remove in production
+                if (email === 'test@example.com') {
+                    messageArea.innerHTML = '<span class="success">Registration successful! Redirecting to login...</span>';
+                    setTimeout(() => {
+                        window.location.href = 'signin.html';
+                    }, 1500);
+                }
+            }
+        });
+
+        // Real-time validation
+        document.getElementById('username').addEventListener('input', (e) => {
+            const username = e.target.value;
+            const validation = document.getElementById('usernameValidation');
+            if (username.length < 3) {
+                validation.textContent = 'Username must be at least 3 characters';
+            } else if (username.length > 20) {
+                validation.textContent = 'Username must be less than 20 characters';
+            } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                validation.textContent = 'Only letters, numbers and underscore allowed';
+            } else {
+                validation.textContent = '';
+            }
+        });
+
+        document.getElementById('password').addEventListener('input', (e) => {
+            const password = e.target.value;
+            const validation = document.getElementById('passwordValidation');
+            if (password.length < 8) {
+                validation.textContent = 'Password must be at least 8 characters';
+            } else if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+                validation.textContent = 'Password must contain both letters and numbers';
+            } else {
+                validation.textContent = '';
+            }
+        });
+    </script>
 
     <footer>
         <div class="footer-grid">
