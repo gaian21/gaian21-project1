@@ -1,0 +1,22 @@
+/* Custom styles */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.owned {
+    border: 2px solid #10B981;
+}
+
+.not-owned {
+    opacity: 0.7;
+}
