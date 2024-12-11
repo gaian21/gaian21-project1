@@ -5,33 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Collection - Greek Syllector</title>
     <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+
+        .collection-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-info {
+            padding: 1rem;
+        }
+
+        .card-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: #1f2937;
+        }
+
+        .card-info p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            text-align: center;
+            color: #dc2626;
+            padding: 1rem;
+            background: #fee2e2;
+            border-radius: 8px;
+            margin: 1rem auto;
+            max-width: 600px;
+        }
+
+        .section-title {
+            margin: 2rem 0 1rem;
+            padding: 0 1rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+    </style>
 </head>
 <body>
     <nav>
         <a href="index.html" class="logo">Greek Syllector</a>
         <div class="nav-links">
-            <a href="mycollection.html">My Collection</a>
+            <a href="mycollection.html" class="active">My Collection</a>
             <a href="explore.html">Explore</a>
             <a href="statistics.html">Statistics</a>
+            <a href="#" id="logoutBtn">Logout</a>
         </div>
     </nav>
 
-    <div class="grid stats-grid">
-        <div class="card">
-            <h3>127</h3>
-            <p>Total Cards</p>
+    <div id="loadingSpinner" class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading your collection...</p>
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+    <div id="collectionContent" style="display: none;">
+        <div class="stats-grid">
+            <div class="card">
+                <h3 id="totalCards">0</h3>
+                <p>Total Cards</p>
+            </div>
+            <div class="card">
+                <h3 id="completion">0%</h3>
+                <p>Complete</p>
+            </div>
+            <div class="card">
+                <h3 id="rareCards">0</h3>
+                <p>Rare Cards</p>
+            </div>
+            <div class="card">
+                <h3 id="limitedEdition">0</h3>
+                <p>Limited Edition</p>
+            </div>
         </div>
-        <div class="card">
-            <h3>25.4%</h3>
-            <p>Complete</p>
-        </div>
-        <div class="card">
-            <h3>12</h3>
-            <p>Rare Cards</p>
-        </div>
-        <div class="card">
-            <h3>3</h3>
-            <p>Limited Edition</p>
+
+        <h2 class="section-title">My Cards</h2>
+        <div class="collection-container">
+            <div id="cardsGrid" class="collection-grid">
+                <!-- Cards will be dynamically inserted here -->
+            </div>
         </div>
     </div>
 
@@ -53,5 +180,96 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        // Auth utilities
+        const getToken = () => localStorage.getItem('auth_token');
+        
+        const logout = () => {
+            localStorage.removeItem('auth_token');
+            window.location.href = 'signin.html';
+        };
+
+        // Check authentication on page load
+        if (!getToken()) {
+            window.location.href = 'signin.html';
+        }
+
+        // Add logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            logout();
+        });
+
+        // Update statistics display
+        const updateStats = (stats) => {
+            document.getElementById('totalCards').textContent = stats.totalCards;
+            document.getElementById('completion').textContent = `${stats.completion}%`;
+            document.getElementById('rareCards').textContent = stats.rareCards;
+            document.getElementById('limitedEdition').textContent = stats.limitedEdition;
+        };
+
+        // Render cards grid
+        const renderCards = (cards) => {
+            const cardsGrid = document.getElementById('cardsGrid');
+            cardsGrid.innerHTML = cards.length ? cards.map(card => `
+                <div class="card-item">
+                    <div class="card-image">
+                        <img src="${card.imageUrl || '/api/placeholder/250/200'}" alt="${card.name}" 
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="card-info">
+                        <h4>${card.name}</h4>
+                        <p>${card.rarity}</p>
+                        <p>Acquired: ${new Date(card.acquiredDate).toLocaleDateString()}</p>
+                    </div>
+                </div>
+            `).join('') : '<p style="grid-column: 1/-1; text-align: center;">No cards in your collection yet</p>';
+        };
+
+        // Load collection data
+        const loadCollection = async () => {
+            const spinner = document.getElementById('loadingSpinner');
+            const error = document.getElementById('errorMessage');
+            const content = document.getElementById('collectionContent');
+
+            try {
+                const response = await fetch(`${API_URL}/collection`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load collection');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    updateStats(data.stats);
+                    renderCards(data.cards);
+                    
+                    spinner.style.display = 'none';
+                    error.style.display = 'none';
+                    content.style.display = 'block';
+                } else {
+                    throw new Error(data.error || 'Failed to load collection');
+                }
+            } catch (err) {
+                spinner.style.display = 'none';
+                error.textContent = err.message;
+                error.style.display = 'block';
+                
+                if (err.message.includes('token')) {
+                    setTimeout(logout, 2000);
+                }
+            }
+        };
+
+        // Initialize
+        loadCollection();
+    </script>
 </body>
 </html>
