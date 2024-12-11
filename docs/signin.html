@@ -32,15 +32,28 @@
             font-weight: bold;
         }
         .button:hover { background: #1d4ed8; }
+        .button:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
         .error { color: #dc2626; }
         .success { color: #059669; }
-        .message { font-size: 0.875rem; margin-top: 0.5rem; text-align: center; }
-        #debugInfo {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: #f3f4f6;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
+        .message { 
+            font-size: 0.875rem; 
+            margin-top: 0.5rem; 
+            text-align: center; 
+        }
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -67,90 +80,72 @@
                 <input type="password" id="password" class="input" required>
             </div>
             <div id="messageArea" class="message"></div>
-            <button type="submit" class="button">Sign In</button>
+            <button type="submit" id="submitButton" class="button">
+                <span>Sign In</span>
+                <span id="loadingSpinner" class="loading" style="display: none;"></span>
+            </button>
             <p style="text-align:center;margin-top:1rem">
                 Don't have an account? <a href="register.html" style="color:#2563eb;text-decoration:none">Register</a>
             </p>
-            
-            <!-- Debug information section -->
-            <div id="debugInfo">
-                <h3>Sample Users from Database:</h3>
-                <p>1. Email: john@example.com / Pass: Password123</p>
-                <p>2. Email: mary@example.com / Pass: SecurePass456</p>
-                <p>3. Email: admin@greeksyllector.com / Pass: AdminPass789</p>
-            </div>
         </form>
     </div>
 
     <script>
-        // Sample users from sample_users.sql
-        const sampleUsers = [
-            {
-                username: 'john_doe',
-                email: 'john@example.com',
-                password: 'Password123',
-                encryption_key: 'test_key_123'
-            },
-            {
-                username: 'mary_smith',
-                email: 'mary@example.com',
-                password: 'SecurePass456',
-                encryption_key: 'test_key_123'
-            },
-            {
-                username: 'admin_user',
-                email: 'admin@greeksyllector.com',
-                password: 'AdminPass789',
-                encryption_key: 'test_key_123'
-            }
-        ];
+        const API_URL = 'http://localhost:5000/api';  // Update this with your actual API URL
+
+        // Function to handle token storage
+        const setAuthToken = (token) => {
+            localStorage.setItem('auth_token', token);
+        };
+
+        // Function to show loading state
+        const setLoading = (isLoading) => {
+            const button = document.getElementById('submitButton');
+            const spinner = document.getElementById('loadingSpinner');
+            const buttonText = button.querySelector('span:not(.loading)');
+            
+            button.disabled = isLoading;
+            spinner.style.display = isLoading ? 'inline-block' : 'none';
+            buttonText.style.display = isLoading ? 'none' : 'inline-block';
+        };
 
         document.getElementById('signinForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const messageArea = document.getElementById('messageArea');
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
+            setLoading(true);
+            messageArea.innerHTML = '';
+
             try {
-                // Find user in sample_users.sql
-                const user = sampleUsers.find(u => u.email === email && u.password === password);
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-                if (user) {
+                const data = await response.json();
+
+                if (data.success) {
                     messageArea.innerHTML = '<span class="success">Login successful! Redirecting...</span>';
+                    setAuthToken(data.token);
                     
-                    // Create session using user_schema.sql format
-                    const session = {
-                        username: user.username,
-                        email: user.email,
-                        timestamp: new Date().toISOString()
-                    };
-
-                    // Store session (encrypted in real implementation)
-                    sessionStorage.setItem('user_session', JSON.stringify(session));
-
-                    // Log successful login
-                    console.log('LOGIN_SUCCESS', {
-                        username: user.username,
-                        timestamp: new Date().toISOString()
-                    });
-
                     // Redirect to main page
                     setTimeout(() => {
                         window.location.href = 'loginmain.html';
                     }, 1500);
                 } else {
-                    // Log failed attempt
-                    console.log('LOGIN_FAILED', {
-                        email: email,
-                        timestamp: new Date().toISOString()
-                    });
-
-                    messageArea.innerHTML = '<span class="error">Invalid email or password</span>';
+                    messageArea.innerHTML = `<span class="error">${data.error || 'Login failed'}</span>`;
                 }
-
             } catch (error) {
                 console.error('Authentication error:', error);
                 messageArea.innerHTML = '<span class="error">Authentication failed. Please try again.</span>';
+            } finally {
+                setLoading(false);
             }
         });
     </script>
