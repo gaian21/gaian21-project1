@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greek Syllector</title>
+    <link rel="stylesheet" href="styles/styles-css.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="./index-html.html">
+                    <img src="images/greeksyllectorlogo.png" alt="Greek Syllector Logo">   Greek Syllector
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+            </ul>
+            <div class="cta-buttons">
+                <a href="./register.html" class="btn btn-primary">Sign Up</a>
+                <a href="./signin.html" class="btn btn-secondary">Log In</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg">
+                <div class="gradient-orb orb-1"></div>
+                <div class="gradient-orb orb-2"></div>
+                <div class="mesh-grid"></div>
+            </div>
+        
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="glowing-text">
+                        Elevate Your Card Collection
+                    </h1>
+                    
+                    <p class="hero-description">
+                        Join the next generation of basketball card collecting. Discover, track, and trade with AI-powered insights and real-time market analytics.
+                    </p>
+                    
+                    <div class="hero-cta">
+                        <a href="#" class="btn btn-primary">
+                            Start Collecting <span class="btn-icon">→</span>
+                        </a>
+                        <a href="#" class="btn btn-link">
+                            View Market ↗
+                        </a>
+                    </div>
+        
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-content">
+                                <h3>10K+</h3>
+                                <p>Active Collectors</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-content">
+                                <h3>100K+</h3>
+                                <p>Cards Tracked</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-content">
+                                <h3>$2M+</h3>
+                                <p>Trading Volume</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="hero-rating">
+                        <div class="rating-item">
+                            <div>Rank #1</div>
+                            <div class="stars">★★★★★</div>
+                            <div>Top Rated</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <video autoplay muted loop playsinlin class="hero-video"e>
+                    <source src="images/logovideo1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+            </div>
+
+
+        </section>
+        
+
+        <section class="cta">
+            <div class="cta-content">
+                <h2>Join the Greek Syllector Community</h2>
+                <p>Sign up now and start your journey as a basketball card collector!</p>
+                <a href="./signin.html" class="btn btn-cta">Get Started</a>
+            </div>
+        </section>
+        <!-- Add a pricing comparison table -->
+        <section class="pricing">
+            <div class="pricing-container">
+                <h2 class="section-title">Latest Wembanyama Card Sales</h2>
+                <div class="pricing-tiers" id="cardContainer">
+                    <!-- Cards will be dynamically inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <script>
+                function createCardElement(cardData) {
+                    return `
+                        <a href="${cardData.listing_url}" target="_blank" class="card-item" style="text-decoration: none; color: inherit;">
+                            <div class="card-image">
+                                ${cardData.image_url ? 
+                                    `<img src="${cardData.image_url}" alt="${cardData.title}" style="width: 100%; height: 100%; object-fit: contain;">` :
+                                    `<i class="fas fa-basketball-ball" style="font-size: 48px; color: #007bff;"></i>`
+                                }
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">${cardData.title}</h3>
+                                <div class="card-price">${cardData.price}</div>
+                            </div>
+                        </a>
+                    `;
+                }
+                
+                async function loadCards() {
+                    try {
+                        // Fetch the JSON file from the correct path
+                        const response = await fetch('./wembanyama_cards.json');
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const cards = await response.json();
+                        
+                        const filteredCards = cards.filter(card => card.title && card.price);
+                        const container = document.getElementById('cardContainer');
+                        
+                        console.log('Loaded cards:', filteredCards);
+                        
+                        // Create HTML for cards
+                        const cardsHTML = filteredCards.map(card => {
+                            // Format the timestamp
+                            const date = new Date(card.timestamp);
+                            const formattedDate = date.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+                
+                            // Clean the title (remove emoji characters)
+                            const cleanTitle = card.title.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '').trim();
+                
+                            return `
+                                <a href="${card.listing_url}" target="_blank" class="card-item" style="text-decoration: none; color: inherit;">
+                                    <div class="card-image">
+                                        <img src="${card.image_url}" 
+                                             alt="${cleanTitle}" 
+                                             style="width: 100%; height: 100%; object-fit: contain;"
+                                             onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-basketball-ball\' style=\'font-size: 48px; color: #007bff;\'></i>';">
+                                    </div>
+                                    <div class="card-content">
+                                        <h3 class="card-title">${cleanTitle}</h3>
+                                        <div class="card-price">${card.price}</div>
+                                        <div class="card-date" style="font-size: 0.9em; color: #666;">
+                                            Listed: ${formattedDate}
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('');
+                
+                        // Update container and duplicate cards for continuous scrolling
+                        container.innerHTML = cardsHTML + cardsHTML + cardsHTML + cardsHTML;
+
+                        
+                        // Add hover effect functionality
+                        const cardItems = document.querySelectorAll('.card-item');
+                        cardItems.forEach(card => {
+                            card.addEventListener('mouseover', function() {
+                                this.style.transform = 'translateY(-10px)';
+                                this.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.2)';
+                            });
+                            
+                            card.addEventListener('mouseout', function() {
+                                this.style.transform = 'translateY(0)';
+                                this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                            });
+                        });
+                
+                        // Add error handling for images
+                        document.querySelectorAll('.card-image img').forEach(img => {
+                            img.addEventListener('error', function() {
+                                console.log(`Failed to load image: ${this.src}`);
+                                this.style.display = 'none';
+                                this.parentElement.innerHTML = `
+                                    <i class="fas fa-basketball-ball" style="font-size: 48px; color: #007bff;"></i>
+                                `;
+                            });
+                        });
+                
+                    } catch (error) {
+                        console.error('Error loading cards:', error);
+                        document.getElementById('cardContainer').innerHTML = `
+                            <div class="error-message" style="text-align: center; padding: 20px;">
+                                <i class="fas fa-exclamation-circle" style="color: #dc3545; font-size: 24px;"></i>
+                                <p style="margin-top: 10px;">Unable to load cards. Please try again later.</p>
+                                <button onclick="loadCards()" style="margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    Retry
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Initialize cards when page loads
+                document.addEventListener('DOMContentLoaded', () => {
+                    loadCards();
+                    
+                    // Add refresh button functionality
+                    const refreshButton = document.createElement('button');
+                    refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Cards';
+                    refreshButton.className = 'refresh-button';
+                    refreshButton.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        padding: 10px 20px;
+                        background: #007bff;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                        z-index: 1000;
+                    `;
+                    refreshButton.addEventListener('click', loadCards);
+                    document.body.appendChild(refreshButton);
+                });
+            </script>
+        </section>
+
+        <!-- Add a blog preview section -->
+        <section class="latest-news">
+            <style>
+                .latest-news {
+                    padding: 4rem 2rem;
+                    background: #f8f9fa;
+                }
+        
+                .latest-news h2 {
+                    text-align: center;
+                    margin-bottom: 3rem;
+                    font-size: 2.5rem;
+                    color: #333;
+                }
+        
+                .blog-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 2rem;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+        
+                .blog-card {
+                    background: white;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    transition: transform 0.3s ease;
+                }
+        
+                .blog-card:hover {
+                    transform: translateY(-5px);
+                }
+        
+                .blog-image {
+                    height: 200px;
+                    overflow: hidden;
+                }
+        
+                .blog-image img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+                }
+        
+                .blog-card:hover .blog-image img {
+                    transform: scale(1.05);
+                }
+        
+                .blog-content {
+                    padding: 1.5rem;
+                }
+        
+                .blog-category {
+                    display: inline-block;
+                    padding: 0.25rem 1rem;
+                    background: #007bff;
+                    color: white;
+                    border-radius: 20px;
+                    font-size: 0.875rem;
+                    margin-bottom: 1rem;
+                }
+        
+                .blog-title {
+                    font-size: 1.25rem;
+                    font-weight: bold;
+                    margin-bottom: 1rem;
+                    color: #333;
+                }
+        
+                .blog-excerpt {
+                    color: #666;
+                    margin-bottom: 1rem;
+                    line-height: 1.6;
+                }
+        
+                .blog-meta {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    color: #888;
+                    font-size: 0.875rem;
+                }
+        
+                .read-more {
+                    color: #007bff;
+                    text-decoration: none;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+        
+                .read-more:hover {
+                    text-decoration: underline;
+                }
+            </style>
+        
+            <h2>Latest from Our Blog</h2>
+            <div class="blog-grid">
+                <!-- Market Analysis Post -->
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="images/nba.png" alt="Basketball Card Market Analysis">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">Market Analysis</span>
+                        <h3 class="blog-title">Wembanyama Rookie Cards: Investment Analysis 2024</h3>
+                        <p class="blog-excerpt">Deep dive into the current market trends of Victor Wembanyama rookie cards. Which variations are showing the most promise?</p>
+                        <div class="blog-meta">
+                            <span>Dec 13, 2024</span>
+                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </article>
+        
+                <!-- Collecting Guide Post -->
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="images/nba.png" alt="Card Collecting Guide">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">Collecting Guide</span>
+                        <h3 class="blog-title">Top 10 Basketball Cards to Watch in 2025</h3>
+                        <p class="blog-excerpt">Expert predictions on which cards will dominate the market next year. From rookies to veterans, here's what to watch.</p>
+                        <div class="blog-meta">
+                            <span>Dec 12, 2024</span>
+                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </article>
+        
+                <!-- News Post -->
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="images/nba.png" alt="Card Trading News">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">News</span>
+                        <h3 class="blog-title">Major Changes Coming to Card Grading Standards</h3>
+                        <p class="blog-excerpt">PSA announces new grading criteria for 2025. What this means for collectors and the future of card grading.</p>
+                        <div class="blog-meta">
+                            <span>Dec 11, 2024</span>
+                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <a href="./index-html.html">Greek Syllector</a>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Greek Syllector. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+      
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+              behavior: 'smooth'
+            });
+          });
+        });
+      </script>
+</body>
+</html>
